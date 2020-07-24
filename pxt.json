@@ -1,0 +1,23 @@
+{
+    "name": "Cube",
+    "version": "0.2.0",
+    "description": "library for Infinite Cube #beta",
+    "dependencies": {
+        "core": "*"
+    },
+    "files": [
+        "README.md",
+        "main.ts",
+        "extension.cpp",
+        "extension.ts",
+        "shims.d.ts",
+        "enums.d.ts",
+        "i2c_hw_interface.cpp",
+        "i2c_hw_interface.h"
+    ],
+    "testFiles": [
+        "test.ts"
+    ],
+    "public": false,
+    "license": "Apache 2.0"
+}
