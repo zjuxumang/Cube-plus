@@ -110,8 +110,10 @@ namespace Cube {
         Left=2,
         //% block="右转路口"
         Right=3,
-        //% block="左转或右转路口"
+        //% block="十字路口"
         Cross=1,
+        //% block="不停止"
+        Forever=0
     }
 
     export enum Go_Distance{
@@ -225,11 +227,30 @@ namespace Cube {
         return 
     }
     
+    // //% block="直线距离标定%param"
+    // //% 
+    // //% group="综合技能"
+    // export function straight_correct(param:number){
+    //     return 
+    // }
+
+    // //% block="转向角度标定%param"
+    // //% 
+    // //% group="综合技能"
+    // export function turn_correct(param:number){
+    //     return 
+    // }
+    
     //% block="获取循线传感器数值"
     //% group="综合技能"
     export function Read_GraySensors(){
-        let buf=pins.createBuffer(6);
-        return buf;
+        let cmd=pins.createBuffer(4);
+        cmd[0]=0x00;
+        cmd[1]=0x45;
+        cmd[2]=0x00;
+        cmd[3]=0x00;
+        pins.i2cWriteBuffer(0x70,cmd,false);
+        return pins.i2cReadBuffer(0x70,6,false);
     }
 
     //% block="循线到%end_type||是否等待到达%mode速度%speed"
@@ -237,7 +258,7 @@ namespace Cube {
     //% group="综合技能"
     //% expandableArgumentMode="toggle"
     //% mode.defl=1
-    //% speed.defl=100 speed.max=100 speed.min=70
+    //% speed.defl=100 speed.max=255 speed.min=70
     export function follow_line(end_type:End_TYPE,mode?:Is_Wait,speed?:number){
         return 
     }
@@ -276,7 +297,7 @@ namespace Cube {
     //% block="原地转向%angle°"
     //% shim=Cube::turn_angle
     //% angle.defl=90
-    //% group="综合技能"
+    //% group="底盘控制"
     export function turn_angle(angle: number){
         return 
     }    
@@ -288,7 +309,7 @@ namespace Cube {
     //% block="原地转向到面向%angle°"
     //% shim=Cube::turn_to_angle
     //% angle.defl=90
-    //% group="综合技能"
+    //% group="底盘控制"
     export function turn_to_angle(angle: number){
         return 
     } 
@@ -296,7 +317,7 @@ namespace Cube {
     //% block="%dir|距离%dist mm||速度%speed"
     //% shim=Cube::go_distance
     //% dist.defl=200
-    //% group="综合技能"
+    //% group="底盘控制"
     //% expandableArgumentMode="toggle"
     //% speed.defl=200 speed.max=600 speed.min=100
     export function go_distance(dir:Go_Distance, dist: number, speed?:number){

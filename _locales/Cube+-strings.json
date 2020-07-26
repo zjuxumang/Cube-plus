@@ -1,5 +1,6 @@
 {
-  "Cube.End_TYPE.Cross|block": "左转或右转路口",
+  "Cube.End_TYPE.Cross|block": "十字路口",
+  "Cube.End_TYPE.Forever|block": "不停止",
   "Cube.End_TYPE.Left|block": "左转路口",
   "Cube.End_TYPE.Right|block": "右转路口",
   "Cube.Get_Imu|block": "读取陀螺仪数据%dir",
