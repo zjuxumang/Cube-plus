@@ -1,5 +1,8 @@
 {
   "Cube.break_follow": "立即停止循线（仅在非等待模式下有效）",
+  "Cube.go_distance": "* @param dir 方向",
+  "Cube.go_distance|param|dist": "距离",
+  "Cube.go_distance|param|speed": "速度 单位为mm/s",
   "Cube.turn_angle": "* @param angle 旋转的角度，顺时针为正，逆时针为负",
   "Cube.turn_to_angle": "* @param angle 旋转到指定角度，以开机时车头正对的角度为0°，顺时针为正，设置范围为-180~180"
 }

@@ -22,8 +22,8 @@ namespace Cube {
         uint8_t Port_reg_value;
     }Device_Reg;
     CubeI2C* i2c=new CubeI2C(&uBit.i2c,0x70);
-    uint8_t Left_wheel=255;
-    uint8_t Right_wheel=255;
+    uint8_t Left_wheel=2;
+    uint8_t Right_wheel=0;
     uint8_t data[16]={0};
     void wait_for_cmd_finish(uint16_t timeout=500){
         uint8_t is_finish=1;
@@ -272,7 +272,7 @@ namespace Cube {
     //%
     void follow_line(int end_type,int is_wait,int speed){
         i2c->I2CWrite(0x51,end_type,speed);
-        if(is_wait)
+        if(is_wait&&end_type!=4)
             wait_for_cmd_finish();
     }
 
@@ -301,6 +301,7 @@ namespace Cube {
     void go_distance(int dir, int dist, int speed){
         if(dir==1)
             dist=-dist;
+        dist*=10;
         i2c->I2CWrite(0x53,(uint8_t)(dist>>8),(uint8_t)(dist&0x00ff));
         i2c->I2CWrite2Byte((uint8_t)(speed>>8),(uint8_t)(speed&0x00ff));
         wait_for_cmd_finish();

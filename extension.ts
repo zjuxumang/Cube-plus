@@ -113,7 +113,7 @@ namespace Cube {
         //% block="十字路口"
         Cross=1,
         //% block="不停止"
-        Forever=0
+        Forever=4
     }
 
     export enum Go_Distance{
@@ -314,12 +314,18 @@ namespace Cube {
         return 
     } 
 
-    //% block="%dir|距离%dist mm||速度%speed"
+    //% block="底盘控制%dir|距离%dist cm||速度%speed"
     //% shim=Cube::go_distance
-    //% dist.defl=200
+    //% dist.defl=30
     //% group="底盘控制"
     //% expandableArgumentMode="toggle"
     //% speed.defl=200 speed.max=600 speed.min=100
+    /**
+     * 
+     * @param dir 方向
+     * @param dist 距离
+     * @param speed 速度 单位为mm/s
+     */
     export function go_distance(dir:Go_Distance, dist: number, speed?:number){
         return 
     }
@@ -446,12 +452,12 @@ namespace Cube {
         return
     }
 
-    //% block="设置 左轮%left| 右轮%right 速度mm/s（±800）"
-    //% left.min=-800 left.max=800 right.min=-800 right.max=800
-    //% shim=Cube::move_motor_close group="底盘控制"
-    export function move_close(left:number, right:number){
-        return
-    }
+    // //% block="设置 左轮%left| 右轮%right 速度mm/s（±800）"
+    // //% left.min=-800 left.max=800 right.min=-800 right.max=800
+    // //% shim=Cube::move_motor_close group="底盘控制"
+    // export function move_close(left:number, right:number){
+    //     return
+    // }
 
     //% block="总线舵机控制|ID %ID|角度 %value|时间 %time ms"
     //% time.defl=500 time.min=0
@@ -482,27 +488,6 @@ namespace Cube {
         }
         serial.writeNumber(time);
         serial.writeString("!");
-    }
-
-    //% block="获取测距传感器数据 编号%begin|至%end"
-    //% advanced=true deprecated=true
-    export function Get_VL53L0X(begin:number,end:number){
-        let data=[0]
-        _update_vl53l0x(begin,end);
-        for (let index = 0; index < end-begin+1; index++) {
-            data.push(_get_vl53l0x(index))
-        }
-        data.shift()
-        return data
-    }
-
-    //% shim=Cube::Update_VL53L0X
-    export function _update_vl53l0x(begin:number,end:number){
-        return
-    }
-    //% shim=Cube::Get_VL53L0X
-    export function _get_vl53l0x(index:number){
-        return 0
     }
 
     //% shim=Cube::test
