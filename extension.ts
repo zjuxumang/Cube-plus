@@ -183,6 +183,7 @@ namespace Cube {
         cmd[2]=port;
         cmd[3]=0x00;
         pins.i2cWriteBuffer(0x70,cmd,false);
+        basic.pause(20);
     }
     //% block="设置端口%port 马达速度 %speed"
     //% group="控制IQ马达" speed.defl=50 speed.max=100 speed.min=-100
@@ -196,6 +197,7 @@ namespace Cube {
         let params=pins.createBuffer(1);
         params[0]=speed;
         pins.i2cWriteBuffer(0x70,params,false);
+        basic.pause(20);
     }
     //% block="端口%port 马达转动速度%speed|角度%target|°"
     //% group="控制IQ马达" speed.max=100 speed.min=-100
@@ -211,6 +213,7 @@ namespace Cube {
         params[1]=target*960/360>>8&0xff;
         params[2]=target*960/360&0xff;
         pins.i2cWriteBuffer(0x70,params,false);
+        basic.pause(20);
     }
     // //% block="端口%port 马达模式%mode"
     // //% group="控制IQ马达"
