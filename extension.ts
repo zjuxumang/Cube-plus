@@ -152,6 +152,12 @@ namespace Cube {
     //|__
     //|__
 
+    export enum IQ_DEVICE{
+        //% block="马达"
+        MOTOR,
+        //% block="颜色传感器"
+        COLOR
+    }
     export enum IQ_PORT{
         PORT1,
         PORT2,
@@ -174,19 +180,21 @@ namespace Cube {
     设置转动角度 0x01   0x42   port   0x03
     */
 
-    //% block="初始化IQ马达 端口%port"
-    //% group="控制IQ马达"
-    export function Init_IQ_Motor(port:IQ_PORT){
+    //% block="初始化IQ%device 端口%port"
+    //% group="控制IQ设备"
+    export function Init_IQ_Device(device:IQ_DEVICE,port:IQ_PORT){
         let cmd=pins.createBuffer(4);
         cmd[0]=0x01;
-        cmd[1]=0x42;
+        if(device==IQ_DEVICE.MOTOR)
+            cmd[1]=0x42;
+        else
+            cmd[1]=0x44;
         cmd[2]=port;
         cmd[3]=0x00;
         pins.i2cWriteBuffer(0x70,cmd,false);
-        basic.pause(20);
     }
     //% block="设置端口%port 马达速度 %speed"
-    //% group="控制IQ马达" speed.defl=50 speed.max=100 speed.min=-100
+    //% group="控制IQ设备" speed.defl=50 speed.max=100 speed.min=-100
     export function Set_IQ_Motor_Speed(port:IQ_PORT,speed:number){
         let cmd=pins.createBuffer(4);
         cmd[0]=0x01;
@@ -197,10 +205,9 @@ namespace Cube {
         let params=pins.createBuffer(1);
         params[0]=speed;
         pins.i2cWriteBuffer(0x70,params,false);
-        basic.pause(20);
     }
     //% block="端口%port 马达转动速度%speed|角度%target|°"
-    //% group="控制IQ马达" speed.max=100 speed.min=-100
+    //% group="控制IQ设备" speed.max=100 speed.min=-100
     export function Set_IQ_Motor_Target(port:IQ_PORT,speed:number,target:number){
         let cmd=pins.createBuffer(4);
         cmd[0]=0x01;
@@ -213,10 +220,30 @@ namespace Cube {
         params[1]=target*960/360>>8&0xff;
         params[2]=target*960/360&0xff;
         pins.i2cWriteBuffer(0x70,params,false);
-        basic.pause(20);
     }
+    //% block="端口%port 颜色传感器数值"
+    //% group="控制IQ设备"
+    export function Get_IQ_Color(port:IQ_PORT){
+        let cmd=pins.createBuffer(4);
+        cmd[0]=0x00;
+        cmd[1]=0x44;
+        cmd[2]=port;
+        cmd[3]=0x01;
+        pins.i2cWriteBuffer(0x70,cmd,false);
+        basic.pause(100);
+        let color_info=pins.createBuffer(2);
+        cmd[3]=0x02;
+        pins.i2cWriteBuffer(0x70,cmd,false);
+        color_info=pins.i2cReadBuffer(0x70,2,false);
+        if(color_info[0]==255){
+            return color_info[1];
+        }
+        else
+            return -1;
+    }
+
     // //% block="端口%port 马达模式%mode"
-    // //% group="控制IQ马达"
+    // //% group="控制IQ设备"
     // export function Set_IQ_Motor_Mode(port:IQ_PORT,mode:IQ_Motor_Mode){
 
     // }
