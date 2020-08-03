@@ -172,6 +172,24 @@ namespace Cube {
         //% block="锁住"
         Mode3
     }
+
+    export enum Colors{
+        //% block="红色"
+        red,
+        //% block="橙色"
+        orange,
+        //% block="黄色"
+        yellow,
+        //% block="绿色"
+        green,
+        //% block="青色"
+        blue,
+        //% block="蓝色"
+        purple,
+        //% block="紫色"
+        violet,
+    }
+    
     /*
                  R/W   Regadd Port   Mode
     初始化马达   0x01   0x42   port   0x00
@@ -192,6 +210,7 @@ namespace Cube {
         cmd[2]=port;
         cmd[3]=0x00;
         pins.i2cWriteBuffer(0x70,cmd,false);
+        basic.pause(50)
     }
     //% block="设置端口%port 马达速度 %speed"
     //% group="控制IQ设备" speed.defl=50 speed.max=100 speed.min=-100
@@ -221,9 +240,10 @@ namespace Cube {
         params[2]=target*960/360&0xff;
         pins.i2cWriteBuffer(0x70,params,false);
     }
-    //% block="端口%port 颜色传感器数值"
+
+    //% block="端口%port 色调度数"
     //% group="控制IQ设备"
-    export function Get_IQ_Color(port:IQ_PORT){
+    export function Get_IQ_HUE(port:IQ_PORT){
         let cmd=pins.createBuffer(4);
         cmd[0]=0x00;
         cmd[1]=0x44;
@@ -233,13 +253,53 @@ namespace Cube {
         basic.pause(100);
         let color_info=pins.createBuffer(2);
         cmd[3]=0x02;
+        basic.pause(10);
         pins.i2cWriteBuffer(0x70,cmd,false);
         color_info=pins.i2cReadBuffer(0x70,2,false);
-        if(color_info[0]==255){
-            return color_info[1];
-        }
+        return Math.floor(Math.map(color_info[1],0,255,0,360));
+    }
+    
+    //% block="端口%port 颜色名称"
+    //% group="控制IQ设备"
+    export function Get_IQ_Color_Name(port:IQ_PORT):string{
+        let cmd=pins.createBuffer(4);
+        cmd[0]=0x00;
+        cmd[1]=0x44;
+        cmd[2]=port;
+        cmd[3]=0x01;
+        pins.i2cWriteBuffer(0x70,cmd,false);
+        basic.pause(100);
+        let color_info=pins.createBuffer(2);
+        cmd[3]=0x02;
+        basic.pause(10);
+        pins.i2cWriteBuffer(0x70,cmd,false);
+        color_info=pins.i2cReadBuffer(0x70,2,false);
+        let colorid=Math.floor(Math.map(color_info[1],0,255,0,8));
+        let color_name:string[]=['red','orange','yellow','green','blue','purple','violet','red'];
+        return color_name[colorid];
+    }
+    //% block="端口%port 颜色传感器测得%color"
+    //% group="控制IQ设备"
+    export function Get_IQ_COLOR(port:IQ_PORT,color:Colors):boolean{
+        let cmd=pins.createBuffer(4);
+        cmd[0]=0x00;
+        cmd[1]=0x44;
+        cmd[2]=port;
+        cmd[3]=0x01;
+        pins.i2cWriteBuffer(0x70,cmd,false);
+        basic.pause(100);
+        let color_info=pins.createBuffer(2);
+        cmd[3]=0x02;
+        basic.pause(10);
+        pins.i2cWriteBuffer(0x70,cmd,false);
+        color_info=pins.i2cReadBuffer(0x70,2,false);
+        let colorid=Math.floor(Math.map(color_info[1],0,255,0,8));
+        if(colorid==7)
+            colorid=0
+        if(color==colorid)
+            return true;
         else
-            return -1;
+            return false;
     }
 
     // //% block="端口%port 马达模式%mode"
